@@ -8,7 +8,7 @@ using QuizApi.ViewModels.Author;
 
 namespace QuizApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("QuizApi/[controller]")]
     [ApiController]
     public class AuthorController : ControllerBase
     {
@@ -102,6 +102,7 @@ namespace QuizApi.Controllers
             await this.repository.UpdateAsync(author);
 
             return NoContent();
+
         }
 
         // DELETE: api/ApiWithActions/5
