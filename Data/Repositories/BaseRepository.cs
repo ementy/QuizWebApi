@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Contracts.DbModels;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,13 +18,13 @@ namespace QuizApi.Data.Repositories.Contracts
         }
 
         //working???
-        public virtual IEnumerable<T> GetAll()
+        public virtual IQueryable<T> GetAll()
         {
-            IEnumerable<T> query = this.dbSet;
+            IQueryable<T> query = this.dbSet;
             return query;
         }
 
-        public async virtual Task<IEnumerable<T>> GetAllAsync()
+        public async virtual Task<ICollection<T>> GetAllAsync()
         {
             return await this.dbSet.ToListAsync();
         }

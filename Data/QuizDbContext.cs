@@ -18,14 +18,16 @@ namespace Data
 
         public DbSet<Author> Authors { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            //TODO: connection string should be in config file
-            optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=QuizApi;Integrated Security=True;");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    //TODO: connection string should be in config file
+        //    optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=QuizApi;Integrated Security=True;");
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Author>().HasIndex(x => x.FullName).IsUnique();
+
             modelBuilder.Entity<Author>()
                 .HasData(
                 new Author { Id = 1, FullName = "Albert Einstein" },

@@ -4,6 +4,7 @@ using Data.Repositories.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,13 +26,15 @@ namespace QuizApi
         {
             //Added the QuizDbContext as a service. Uses SqlServer
             //TODO: Export the connection string to a different file/class
-            services.AddDbContext<QuizDbContext>(opt => opt.UseSqlServer("Server=.\\SQLEXPRESS;Database=QuizApi;Integrated Security=True;"));
+
+            services.AddDbContext<QuizDbContext>(opt => opt.UseSqlServer("Server =.\\SQLEXPRESS; Database = QuizApi; Integrated Security = True;"));
+            //services.AddDbContext<QuizDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("QuizDatabase")));
 
             //Transients or Singletons?
             services.AddTransient<IAuthorRepository, AuthorRepository>();
             services.AddTransient<IQuoteRepository, QuoteRepository>();
 
-
+            services.AddRouting();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

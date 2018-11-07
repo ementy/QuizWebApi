@@ -7,10 +7,10 @@ namespace QuizApi.Data.Repositories.Contracts
     public interface IBaseRepository<T> where T : class
     {
         //receives no arguments and returns enumerable collection of entities of generic type T
-        IEnumerable<T> GetAll();
+        IQueryable<T> GetAll();
 
         //receives no arguments and returns asynchronously Task  with enumerable collection of entities of generic type T
-        Task<IEnumerable<T>> GetAllAsync();       
+        Task<ICollection<T>> GetAllAsync();       
 
         //receives parameter id of type object and returns an entity of generic type T with the proviced id
         T GetById(object id);
@@ -47,5 +47,11 @@ namespace QuizApi.Data.Repositories.Contracts
 
         //saves the changes asynchronously to the DbContext and returns an async Task
         Task SaveAsync();
+
+        ////returns a random entity from the entity collection, has no parameters
+        //T Random();
+
+        ////returns a random entity asynchronously, receives no arguments and returns a task
+        //Task<T> RandomAsync();
     }
 }
