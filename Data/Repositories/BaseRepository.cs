@@ -1,15 +1,13 @@
-﻿using Contracts.DbModels;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace QuizApi.Data.Repositories.Contracts
 {
-    public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
+	public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-        private readonly DbContext context;
-        private readonly DbSet<T> dbSet;
+		protected readonly DbContext context;
+        protected readonly DbSet<T> dbSet;
 
         public BaseRepository(DbContext context)
         {
@@ -17,14 +15,19 @@ namespace QuizApi.Data.Repositories.Contracts
             this.dbSet = context.Set<T>();
         }
 
-        //working???
         public virtual IQueryable<T> GetAll()
         {
             IQueryable<T> query = this.dbSet;
             return query;
         }
 
-        public async virtual Task<IQueryable<T>> GetAllAsync()
+		public virtual IQueryable<T> GetAll(string includeEntity)
+		{
+			IQueryable<T> query = this.dbSet;
+			return query;
+		}
+
+		public async virtual Task<IQueryable<T>> GetAllAsync()
         {
             var result = this.GetAll();
             return await Task.FromResult(result);
@@ -98,5 +101,5 @@ namespace QuizApi.Data.Repositories.Contracts
         {
             await this.context.SaveChangesAsync();
         }
-    }
+	}
 }

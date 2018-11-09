@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbModels", "DbModels\DbMode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sometests", "ConsoleApp1\sometests.csproj", "{F22D0BF4-F0DA-4A0D-AE23-B915ECCDF883}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizTask.Tests", "QuizTask.Tests\QuizTask.Tests.csproj", "{C97A1A9B-4B32-4C8E-8052-DD28025E963B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizTask.Tests", "QuizTask.Tests\QuizTask.Tests.csproj", "{C97A1A9B-4B32-4C8E-8052-DD28025E963B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{7C42B0CD-BBC2-41A8-B67C-69DAD8FC971B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C97A1A9B-4B32-4C8E-8052-DD28025E963B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C97A1A9B-4B32-4C8E-8052-DD28025E963B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C97A1A9B-4B32-4C8E-8052-DD28025E963B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C42B0CD-BBC2-41A8-B67C-69DAD8FC971B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C42B0CD-BBC2-41A8-B67C-69DAD8FC971B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C42B0CD-BBC2-41A8-B67C-69DAD8FC971B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C42B0CD-BBC2-41A8-B67C-69DAD8FC971B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

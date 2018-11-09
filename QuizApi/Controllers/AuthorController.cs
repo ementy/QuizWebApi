@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Constants;
 using Data.Repositories.Contracts;
 using Entities.DbModels;
 using Microsoft.AspNetCore.Mvc;
 using QuizApi.ViewModels.Author;
+using QuizApi.ViewModels.Quotes;
 
 namespace QuizApi.Controllers
 {
 	/// <summary>
 	/// Offers the basic CRUD operations with the Author entity type
 	/// </summary>
-    [Route("QuizApi/[controller]")]
+	[Route("QuizApi/[controller]")]
     [ApiController]
     public class AuthorController : ControllerBase
     {
@@ -61,7 +62,6 @@ namespace QuizApi.Controllers
 		[ProducesResponseType(404)]
 		public async Task<ActionResult<AuthorViewModel>> GetAuthorById(int id)
         {
-            //TODO: Add validation for ID > 0
             var author = await this.repository.GetByIdAsync(id);
 
             if (author == null)
@@ -77,12 +77,36 @@ namespace QuizApi.Controllers
             return Ok(resultAuthor);
         }
 
-        /// <summary>
+		//TEST 1
+		[HttpGet("{id}/quotes")]
+		public async Task<ActionResult<AuthorWithQuotesViewModel>> GetAuthorWithQuotesById(int id)
+		{
+			var author = this.repository.GetAuthorQuotesById(id);
+			//var quotes = this.repository.GetAuthorQuotes(author);
+
+			if (author == null)
+			{
+				return NotFound();
+			}
+
+			var resultAuthor = new AuthorWithQuotesViewModel
+			{
+				FullName = author.FullName,
+				Quotes = author.Quotes.Select(q => new QuoteViewModel
+				{
+					Content = q.Content
+				}).ToList()
+			};
+
+			return Ok(resultAuthor);
+		}
+
+		/// <summary>
 		/// Creates a new entity.
 		/// </summary>
 		/// <param name="model">requires model</param>
 		/// <returns></returns>
-        [HttpPost]
+		[HttpPost]
 		[ProducesResponseType(201)]
 		[ProducesResponseType(400)]
 		public async Task<IActionResult> Create([FromBody] AuthorCreateViewModel model)
@@ -103,8 +127,7 @@ namespace QuizApi.Controllers
 
 			if (authorWithNameExists != null)
 			{
-				//TODO: move text to consts file
-				return BadRequest("Author already exists.");
+				return BadRequest(ErrorMessages.AuthorAlreadyExists);
 			}
             await this.repository.AddAsync(newAuthor);
 
@@ -123,14 +146,12 @@ namespace QuizApi.Controllers
 		[ProducesResponseType(404)]
         public async Task<IActionResult> Update(int id, [FromBody] AuthorUpdateViewModel model)
         {
-            //TODO: Add validation for Id > 0
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            //Done: add check if the author already exists
-
+            //DONE: add check if the author already exists
             var author = await this.repository.GetByIdAsync(id);
 
             if (author == null)
@@ -157,7 +178,6 @@ namespace QuizApi.Controllers
 		[ProducesResponseType(404)]
 		public async Task<IActionResult> Delete(int id)
         {
-            //TODO: Add validation for Id < 0
             var author = await this.repository.GetByIdAsync(id);
 
             if (author == null)
@@ -179,8 +199,6 @@ namespace QuizApi.Controllers
 		[ProducesResponseType(400)]
 		public async Task<ActionResult<AuthorRandomViewModel>> Random()
         {
-            //TODO: Add validation for ID > 0
-
             IQueryable<int> authorsIds = this.repository.GetAll().Select(x => x.Id);
             var listAuthorIds = authorsIds.ToList();
             

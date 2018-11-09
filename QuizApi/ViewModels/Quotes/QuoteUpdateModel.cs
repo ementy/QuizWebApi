@@ -6,7 +6,6 @@ namespace QuizApi.ViewModels.Quotes
     {
         [Required]
         [StringLength(500)]
-        //display name and error message?
         public string Content { get; set; }
 
         [Required]

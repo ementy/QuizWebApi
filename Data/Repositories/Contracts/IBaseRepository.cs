@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace QuizApi.Data.Repositories.Contracts
@@ -47,11 +49,5 @@ namespace QuizApi.Data.Repositories.Contracts
 
         //saves the changes asynchronously to the DbContext and returns an async Task
         Task SaveAsync();
-
-        ////returns a random entity from the entity collection, has no parameters
-        //T Random();
-
-        ////returns a random entity asynchronously, receives no arguments and returns a task
-        //Task<T> RandomAsync();
-    }
+	}
 }

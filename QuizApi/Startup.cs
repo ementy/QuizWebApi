@@ -4,7 +4,6 @@ using Data.Repositories.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,8 +25,6 @@ namespace QuizApi
 		public void ConfigureServices(IServiceCollection services)
 		{
 			//Added the QuizDbContext as a service. Uses SqlServer
-			//TODO: Export the connection string to a different file/class
-
 			services.AddDbContext<QuizDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("QuizDatabase")));
 
 			//Transients or Singletons?
@@ -36,7 +33,7 @@ namespace QuizApi
 
 			services.AddRouting();
 
-			//try adding swagger
+			//First try adding Swagger
 			services.AddSwaggerGen(swagger =>
 			{
 				swagger.DescribeAllParametersInCamelCase();

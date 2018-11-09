@@ -12,6 +12,7 @@ namespace QuizApi.ViewModels.Author
 		/// </summary>
         [Required]
         [StringLength(100)]
+		[Display(Name = "Full Name")]
         public string FullName { get; set; }
     }
 }

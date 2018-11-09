@@ -38,12 +38,10 @@ namespace QuizTask.Tests
             var fakeAuthorRepo = new Mock<IAuthorRepository>();
             fakeAuthorRepo.Setup(x => x.GetById(quoteVM.AuthorId)).Returns(author);
 
-
             var controller = new QuoteController(fakeRepo.Object, fakeAuthorRepo.Object);
 
             //ACT
             var taskResult = await controller.CreateAsync(quoteVM);
-
 
             //ASSERT
             var taskResultContent = taskResult as CreatedAtActionResult;
@@ -51,12 +49,6 @@ namespace QuizTask.Tests
 
             var routeValue = taskResultContent.RouteValues;
             var value = taskResultContent.Value;
-
-            //var createdAtActionResult = Xunit.Assert.IsType<CreatedAtActionResult>(taskResult);
-            //Xunit.Assert.Null(createdAtActionResult.ControllerName);
-            //Xunit.Assert.Equal(expectedStatusCode, createdAtActionResult.StatusCode);
-            //Xunit.Assert.Equal("GetQuoteByIdAsync", createdAtActionResult.ActionName);
-            //fakeRepo.Verify();
 
             //check if the task result of the controller method is CreatedAtActionResult
             Assert.IsInstanceOf<CreatedAtActionResult>(taskResult);
@@ -75,9 +67,6 @@ namespace QuizTask.Tests
             Assert.IsNotNull(taskResultContent.Value);
             //check if the return object of the CreateAtAction is Quote class
             Assert.IsInstanceOf<Quote>(taskResultContent.Value);
-
-            //fakeRepo.Verify();
-
         }
 
         [Test]

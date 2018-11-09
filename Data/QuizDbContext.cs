@@ -20,7 +20,7 @@ namespace Data
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
-        //    //TODO: connection string should be in config file
+        //    //connection string should be in config file
         //    optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=QuizApi;Integrated Security=True;");
         //}
 
@@ -59,7 +59,7 @@ namespace Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
+			//optionsBuilder.UseLazyLoadingProxies();
         }
     }
 }

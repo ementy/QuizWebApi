@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Constants;
 using Data.Repositories.Contracts;
 using Entities.DbModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using QuizApi.Data.Repositories.Contracts;
 using QuizApi.ViewModels.Quotes;
 
 namespace QuizApi.Controllers
 {
-    [Route("QuizApi/[controller]")]
+	[Route("QuizApi/[controller]")]
     [ApiController]
     public class QuoteController : ControllerBase
     {
@@ -96,8 +94,7 @@ namespace QuizApi.Controllers
 
             if (author == null)
             {
-                //TODO: errors string in constants class
-                return BadRequest("Invalid author.");
+                return BadRequest(ErrorMessages.InvalidAuthorWhenCreatingQuote);
             }
 
             var newQuote = new Quote
@@ -105,6 +102,8 @@ namespace QuizApi.Controllers
                 Content = model.Content,
                 AuthorId = model.AuthorId
             };
+
+			//TODO: Add check if such quote already exists.
 
             await this.quoteRepository.AddAsync(newQuote);
 
@@ -174,8 +173,6 @@ namespace QuizApi.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<QuoteRandomViewModel>> Random()
         {
-            //TODO: Add validation for ID > 0
-
             IQueryable<int> quoteIds = this.quoteRepository.GetAll().Select(x => x.Id);
             var listIds = quoteIds.ToList();
 
