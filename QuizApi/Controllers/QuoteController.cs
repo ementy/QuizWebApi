@@ -25,28 +25,39 @@ namespace QuizApi.Controllers
             this.authorRepository = authorRepository;
         }
 
-        // GET: api/Quote
+        /// <summary>
+		/// Gets all Quotes
+		/// </summary>
+		/// <returns>Returns all quotes or Status Code 404 Not Found if there are no quotes</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<QuoteViewModel>>> GetAllQuotesAsync()
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
+		public async Task<ActionResult<IQueryable<QuoteViewModel>>> GetAllQuotesAsync()
         {
-            IEnumerable<Quote> quotesResult = await this.quoteRepository.GetAllAsync();
+            IQueryable<Quote> quotesResult = await this.quoteRepository.GetAllAsync();
 
-            if (!quotesResult.Any())
-            {
-                return NotFound();
-            }
-
-            IEnumerable<QuoteViewModel> quotes = quotesResult.Select(x => new QuoteViewModel
+            IQueryable<QuoteViewModel> quotes = quotesResult.Select(x => new QuoteViewModel
             {
                 Content = x.Content
             });
 
+            if (!quotes.Any())
+            {
+                return NotFound();
+            }
+
             return Ok(quotes);
         }
 
-        // GET: api/Quote/5
-        [HttpGet("{id}", Name = "GetQuoteByIdAsync")]
-        public async Task<ActionResult<QuoteViewModel>> GetQuoteByIdAsync(int id)
+		/// <summary>
+		/// Gets a Quote by provided Id
+		/// </summary>
+		/// <param name="id">The Id of the quoute you want to receive</param>
+		/// <returns>Returns the content of the quote with the provided id or Status Code 404 Not Found if there is no quote with this Id</returns>
+		[HttpGet("{id}", Name = "GetQuoteByIdAsync")]
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
+		public async Task<ActionResult<QuoteViewModel>> GetQuoteByIdAsync(int id)
         {
             //check for the Id?
 
@@ -65,7 +76,11 @@ namespace QuizApi.Controllers
             return Ok(newQuote);
         }
 
-        // POST: api/Quote
+        /// <summary>
+		/// Creates a new quote
+		/// </summary>
+		/// <param name="model">Creates a new quote with the provided string Content and int AuthorId</param>
+		/// <returns></returns>
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -96,9 +111,15 @@ namespace QuizApi.Controllers
             return CreatedAtAction(nameof(GetQuoteByIdAsync), new { id = newQuote.Id }, newQuote);
         }
 
-        // PUT: api/Quote/5
+        /// <summary>
+		/// Updates the quote with the provided Id
+		/// </summary>
+		/// <param name="id">The Id of the quote you wish to modify.</param>
+		/// <param name="model">The content and the author of the quote entity.</param>
+		/// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] QuoteUpdateModel model)
         {
@@ -109,6 +130,11 @@ namespace QuizApi.Controllers
 
             var quote = await this.quoteRepository.GetByIdAsync(id);
 
+            if (quote == null)
+            {
+                return NotFound();
+            }
+
             quote.Content = model.Content;
             quote.AuthorId = model.AuthorId;
 
@@ -117,9 +143,14 @@ namespace QuizApi.Controllers
             return NoContent();
         }
 
-        // DELETE: api/ApiWithActions/5
+        /// <summary>
+		/// Deletes an quote with the provided Id.
+		/// </summary>
+		/// <param name="id">The id of the quote you wish to delete.</param>
+		/// <returns></returns>
         [HttpDelete("{id}")]
-        [ProducesResponseType(201)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Delete(int id)
         {
             Quote quote = await this.quoteRepository.GetByIdAsync(id);
@@ -134,20 +165,26 @@ namespace QuizApi.Controllers
             return NoContent();
         }
 
-        //GET: api/quote/random
+        /// <summary>
+		/// Gets a random quote.
+		/// </summary>
+		/// <returns></returns>
         [HttpGet("Random")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<QuoteRandomViewModel>> Random()
         {
             //TODO: Add validation for ID > 0
 
             IQueryable<int> quoteIds = this.quoteRepository.GetAll().Select(x => x.Id);
-            
-            Random rnd = new Random();
-            int randomIndex = rnd.Next(quoteIds.Count());
+            var listIds = quoteIds.ToList();
 
-            Quote quote = await this.quoteRepository.GetByIdAsync(randomIndex);
+            Random rnd = new Random();
+            int randomIndex = rnd.Next(listIds.Count);
+
+            var id = listIds[randomIndex];
+
+            Quote quote = await this.quoteRepository.GetByIdAsync(id);
 
             if (quote == null)
             {
@@ -164,12 +201,19 @@ namespace QuizApi.Controllers
         }
 
 
-        //Get: api/quote/{id}/author/{id}
+        /// <summary>
+		/// Check if the quote with the provided Id belongs to the author with the provided Id.
+		/// </summary>
+		/// <param name="quoteId">The id of the quote you wish to check.</param>
+		/// <param name="authorId">The Id of the author you wish to check.</param>
+		/// <returns>Returns true/false if the quote belonges to the author OR 404 NotFound if theres no such quote.</returns>
 
         //[HttpGet(Name = "GetQuoteAndAuthorByIds")]
         //[Route("{quoteId}/author/{authorId}")]
         [HttpGet("{quoteId}/author/{authorId}")]
-        public async Task<ActionResult<bool>> GetQuoteAndAuthorByIds(int quoteId, int authorId)
+		[ProducesResponseType(200)]
+		[ProducesResponseType(400)]
+		public async Task<ActionResult<bool>> GetQuoteAndAuthorByIds(int quoteId, int authorId)
         {
             var quote = await this.quoteRepository.GetByIdAsync(quoteId);
 

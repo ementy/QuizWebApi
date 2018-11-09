@@ -86,6 +86,7 @@ namespace QuizTask.Tests
             //arrange
             var mystring = new string('*', 600);
 
+            //add case with invalid author id
             var invalidQuoteVM = new QuoteCreateViewModel()
             {
                 AuthorId = 1,

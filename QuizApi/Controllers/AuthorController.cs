@@ -9,27 +9,36 @@ using QuizApi.ViewModels.Author;
 
 namespace QuizApi.Controllers
 {
+	/// <summary>
+	/// Offers the basic CRUD operations with the Author entity type
+	/// </summary>
     [Route("QuizApi/[controller]")]
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        //Repo as private field and initiation in the constructor
         private readonly IAuthorRepository repository;
 
+		/// <summary>
+		/// The constructor of the author contoller
+		/// </summary>
+		/// <param name="repository">Receives the Author Repository.</param>
         public AuthorController(IAuthorRepository repository)
         {
             this.repository = repository;
         }
 
-        // GET: api/Authors
+        /// <summary>
+		/// Gets all values
+		/// </summary>
+		/// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AuthorViewModel>>> GetAllAuthors()
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
+		public async Task<ActionResult<IQueryable<AuthorViewModel>>> GetAllAuthors()
         {
-            IEnumerable<AuthorViewModel> authors = null;
+            IQueryable<Author> authorsResult = await this.repository.GetAllAsync();
 
-            var authorsResult = await this.repository.GetAllAsync();
-
-            authors = authorsResult.Select(x => new AuthorViewModel
+            IQueryable<AuthorViewModel>  authors = authorsResult.Select(x => new AuthorViewModel
             {
                 FullName = x.FullName
             });
@@ -42,9 +51,15 @@ namespace QuizApi.Controllers
             return Ok(authors);
         }
 
-        // GET: api/Author/5
+        /// <summary>
+		/// Gets a value by Id.
+		/// </summary>
+		/// <param name="id">The Id of the entity you wish to get.</param>
+		/// <returns></returns>
         [HttpGet("{id}", Name = "GetAuthorById")]
-        public async Task<ActionResult<AuthorViewModel>> GetAuthorById(int id)
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
+		public async Task<ActionResult<AuthorViewModel>> GetAuthorById(int id)
         {
             //TODO: Add validation for ID > 0
             var author = await this.repository.GetByIdAsync(id);
@@ -62,9 +77,15 @@ namespace QuizApi.Controllers
             return Ok(resultAuthor);
         }
 
-        // POST: api/Author
+        /// <summary>
+		/// Creates a new entity.
+		/// </summary>
+		/// <param name="model">requires model</param>
+		/// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] AuthorCreateViewModel model)
+		[ProducesResponseType(201)]
+		[ProducesResponseType(400)]
+		public async Task<IActionResult> Create([FromBody] AuthorCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -76,15 +97,30 @@ namespace QuizApi.Controllers
                 FullName = model.FullName
             };
 
-            await this.repository.AddAsync(newAuthor);
+			//the server returns 500 Internal Server Error if an author with the same name already exists 
+			//Check if there is already an author with the same Full Name
+			Author authorWithNameExists = this.repository.GetAll().FirstOrDefault(x => x.FullName == model.FullName);
 
-            //the server returns 500 Internal Server Error if an author with the same name already exists 
+			if (authorWithNameExists != null)
+			{
+				//TODO: move text to consts file
+				return BadRequest("Author already exists.");
+			}
+            await this.repository.AddAsync(newAuthor);
 
             return CreatedAtAction(nameof(GetAuthorById), new { id = newAuthor.Id }, newAuthor);
         }
 
-        // PUT: api/Author/5
+        /// <summary>
+		/// Updates an item with the provided id.
+		/// </summary>
+		/// <param name="id">The id of the entity you wish to update/modify.</param>
+		/// <param name="model">The content you wish to change.</param>
+		/// <returns></returns>
         [HttpPut("{id}")]
+		[ProducesResponseType(204)]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
         public async Task<IActionResult> Update(int id, [FromBody] AuthorUpdateViewModel model)
         {
             //TODO: Add validation for Id > 0
@@ -93,7 +129,7 @@ namespace QuizApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            //TODO: add check if the author already exists
+            //Done: add check if the author already exists
 
             var author = await this.repository.GetByIdAsync(id);
 
@@ -110,9 +146,16 @@ namespace QuizApi.Controllers
 
         }
 
-        // DELETE: api/ApiWithActions/5
+        /// <summary>
+		/// Deletes an entity with the provided Id.
+		/// </summary>
+		/// <param name="id">The id of the entity you wish to delete.</param>
+		/// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+		[ProducesResponseType(204)]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
+		public async Task<IActionResult> Delete(int id)
         {
             //TODO: Add validation for Id < 0
             var author = await this.repository.GetByIdAsync(id);
@@ -127,20 +170,31 @@ namespace QuizApi.Controllers
             return NoContent();
         }
 
-        // GET: api/Author/Random
+        /// <summary>
+		/// Gets a random entity.
+		/// </summary>
+		/// <returns>Returns the Full Name property of a random author.</returns>
         [HttpGet("Random")]
-        public async Task<ActionResult<AuthorRandomViewModel>> Random()
+		[ProducesResponseType(200)]
+		[ProducesResponseType(400)]
+		public async Task<ActionResult<AuthorRandomViewModel>> Random()
         {
             //TODO: Add validation for ID > 0
 
-            //Move this logic to the IAuthor repository?
-            IEnumerable<Author> authors = await this.repository.GetAllAsync();
-            IEnumerable<int> authorIds = authors.Select(x => x.Id);
+            IQueryable<int> authorsIds = this.repository.GetAll().Select(x => x.Id);
+            var listAuthorIds = authorsIds.ToList();
             
             Random rnd = new Random();
-            int randomIndex = rnd.Next(authorIds.Count());
+            int randomIndex = rnd.Next(listAuthorIds.Count);
 
-            Author author = authors.ElementAt(randomIndex);
+            var id = listAuthorIds[randomIndex];
+
+            Author author = await this.repository.GetByIdAsync(id);
+
+            if (author == null)
+            {
+                return BadRequest();
+            }
 
             var resultAuthor = new AuthorRandomViewModel
             {

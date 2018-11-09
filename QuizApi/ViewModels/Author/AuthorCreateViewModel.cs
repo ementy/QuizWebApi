@@ -2,9 +2,14 @@
 
 namespace QuizApi.ViewModels.Author
 {
-    public class AuthorCreateViewModel
+	/// <summary>
+	/// The model that needs to be filled when creating a new author.
+	/// </summary>
+	public class AuthorCreateViewModel
     {
-        //display name and error message?
+		/// <summary>
+		/// A FullName field containing the name of the author in string format with maximum allowed lenght 100 symbols. The fiels is required.
+		/// </summary>
         [Required]
         [StringLength(100)]
         public string FullName { get; set; }

@@ -9,50 +9,66 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QuizApi.Data.Repositories;
+using System.IO;
 
 namespace QuizApi
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+	public class Startup
+	{
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            //Added the QuizDbContext as a service. Uses SqlServer
-            //TODO: Export the connection string to a different file/class
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
+			//Added the QuizDbContext as a service. Uses SqlServer
+			//TODO: Export the connection string to a different file/class
 
-            services.AddDbContext<QuizDbContext>(opt => opt.UseSqlServer("Server =.\\SQLEXPRESS; Database = QuizApi; Integrated Security = True;"));
-            //services.AddDbContext<QuizDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("QuizDatabase")));
+			services.AddDbContext<QuizDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("QuizDatabase")));
 
-            //Transients or Singletons?
-            services.AddTransient<IAuthorRepository, AuthorRepository>();
-            services.AddTransient<IQuoteRepository, QuoteRepository>();
+			//Transients or Singletons?
+			services.AddTransient<IAuthorRepository, AuthorRepository>();
+			services.AddTransient<IQuoteRepository, QuoteRepository>();
 
-            services.AddRouting();
+			services.AddRouting();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-        }
+			//try adding swagger
+			services.AddSwaggerGen(swagger =>
+			{
+				swagger.DescribeAllParametersInCamelCase();
+				swagger.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "QuizApiSwagger" });
+				swagger.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "QuizApi.xml"));
+			});
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+		}
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
-        }
-    }
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseHsts();
+			}
+
+			app.UseSwagger();
+			app.UseSwaggerUI(c =>
+			{
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "QuizApiSwagger");
+			});
+
+			app.UseMvc();
+
+			app.UseHttpsRedirection();
+			app.UseMvc();
+		}
+	}
 }

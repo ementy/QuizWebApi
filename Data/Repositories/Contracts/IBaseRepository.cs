@@ -10,7 +10,7 @@ namespace QuizApi.Data.Repositories.Contracts
         IQueryable<T> GetAll();
 
         //receives no arguments and returns asynchronously Task  with enumerable collection of entities of generic type T
-        Task<ICollection<T>> GetAllAsync();       
+        Task<IQueryable<T>> GetAllAsync();       
 
         //receives parameter id of type object and returns an entity of generic type T with the proviced id
         T GetById(object id);

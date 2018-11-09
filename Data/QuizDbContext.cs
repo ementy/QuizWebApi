@@ -29,6 +29,16 @@ namespace Data
             modelBuilder.Entity<Author>().HasIndex(x => x.FullName).IsUnique();
 
             modelBuilder.Entity<Author>()
+                .HasMany(a => a.Quotes)
+                .WithOne(q => q.Author)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Quote>()
+                .HasOne(q => q.Author)
+                .WithMany(a => a.Quotes)
+                .HasForeignKey(x => x.AuthorId);
+
+            modelBuilder.Entity<Author>()
                 .HasData(
                 new Author { Id = 1, FullName = "Albert Einstein" },
                 new Author { Id = 2, FullName = "Dr. Seuss" },
@@ -45,6 +55,11 @@ namespace Data
                 new Quote { Id = 5, AuthorId = 4, Content = "If you tell the truth, you don't have to remember anything" },
                 new Quote { Id = 6, AuthorId = 3, Content = "Live as if you were to die tomorrow. Learn as if you were to live forever." }
                 );
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }

@@ -24,9 +24,10 @@ namespace QuizApi.Data.Repositories.Contracts
             return query;
         }
 
-        public async virtual Task<ICollection<T>> GetAllAsync()
+        public async virtual Task<IQueryable<T>> GetAllAsync()
         {
-            return await this.dbSet.ToListAsync();
+            var result = this.GetAll();
+            return await Task.FromResult(result);
         }
 
         public virtual T GetById(object id)

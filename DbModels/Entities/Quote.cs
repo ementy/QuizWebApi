@@ -16,5 +16,6 @@ namespace Entities.DbModels
         //Connecting property to tha author entity. One quote has only one author
         [Required]
         public int AuthorId { get; set; }
+        public Author Author { get; set; }
     }
 }

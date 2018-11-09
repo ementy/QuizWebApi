@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QuizApi</name>
+    </assembly>
+    <members>
+        <member name="T:QuizApi.Controllers.AuthorController">
+            <summary>
+            Offers the basic CRUD operations with the Author entity type
+            </summary>
+        </member>
+        <member name="M:QuizApi.Controllers.AuthorController.#ctor(Data.Repositories.Contracts.IAuthorRepository)">
+            <summary>
+            The constructor of the author contoller
+            </summary>
+            <param name="repository">Receives the Author Repository.</param>
+        </member>
+        <member name="M:QuizApi.Controllers.AuthorController.GetAllAuthors">
+            <summary>
+            Gets all values
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:QuizApi.Controllers.AuthorController.GetAuthorById(System.Int32)">
+            <summary>
+            Gets a value by Id.
+            </summary>
+            <param name="id">The Id of the entity you wish to get.</param>
+            <returns></returns>
+        </member>
+        <member name="M:QuizApi.Controllers.AuthorController.Create(QuizApi.ViewModels.Author.AuthorCreateViewModel)">
+            <summary>
+            Creates a new entity.
+            </summary>
+            <param name="model">requires model</param>
+            <returns></returns>
+        </member>
+        <member name="M:QuizApi.Controllers.AuthorController.Update(System.Int32,QuizApi.ViewModels.Author.AuthorUpdateViewModel)">
+            <summary>
+            Updates an item with the provided id.
+            </summary>
+            <param name="id">The id of the entity you wish to update/modify.</param>
+            <param name="model">The content you wish to change.</param>
+            <returns></returns>
+        </member>
+        <member name="M:QuizApi.Controllers.AuthorController.Delete(System.Int32)">
+            <summary>
+            Deletes an entity with the provided Id.
+            </summary>
+            <param name="id">The id of the entity you wish to delete.</param>
+            <returns></returns>
+        </member>
+        <member name="M:QuizApi.Controllers.AuthorController.Random">
+            <summary>
+            Gets a random entity.
+            </summary>
+            <returns>Returns the Full Name property of a random author.</returns>
+        </member>
+        <member name="M:QuizApi.Controllers.QuoteController.GetAllQuotesAsync">
+            <summary>
+            Gets all Quotes
+            </summary>
+            <returns>Returns all quotes or Status Code 404 Not Found if there are no quotes</returns>
+        </member>
+        <member name="M:QuizApi.Controllers.QuoteController.GetQuoteByIdAsync(System.Int32)">
+            <summary>
+            Gets a Quote by provided Id
+            </summary>
+            <param name="id">The Id of the quoute you want to receive</param>
+            <returns>Returns the content of the quote with the provided id or Status Code 404 Not Found if there is no quote with this Id</returns>
+        </member>
+        <member name="M:QuizApi.Controllers.QuoteController.CreateAsync(QuizApi.ViewModels.Quotes.QuoteCreateViewModel)">
+            <summary>
+            Creates a new quote
+            </summary>
+            <param name="model">Creates a new quote with the provided string Content and int AuthorId</param>
+            <returns></returns>
+        </member>
+        <member name="M:QuizApi.Controllers.QuoteController.UpdateAsync(System.Int32,QuizApi.ViewModels.Quotes.QuoteUpdateModel)">
+            <summary>
+            Updates the quote with the provided Id
+            </summary>
+            <param name="id">The Id of the quote you wish to modify.</param>
+            <param name="model">The content and the author of the quote entity.</param>
+            <returns></returns>
+        </member>
+        <member name="M:QuizApi.Controllers.QuoteController.Delete(System.Int32)">
+            <summary>
+            Deletes an quote with the provided Id.
+            </summary>
+            <param name="id">The id of the quote you wish to delete.</param>
+            <returns></returns>
+        </member>
+        <member name="M:QuizApi.Controllers.QuoteController.Random">
+            <summary>
+            Gets a random quote.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:QuizApi.Controllers.QuoteController.GetQuoteAndAuthorByIds(System.Int32,System.Int32)">
+            <summary>
+            Check if the quote with the provided Id belongs to the author with the provided Id.
+            </summary>
+            <param name="quoteId">The id of the quote you wish to check.</param>
+            <param name="authorId">The Id of the author you wish to check.</param>
+            <returns>Returns true/false if the quote belonges to the author OR 404 NotFound if theres no such quote.</returns>
+        </member>
+        <member name="T:QuizApi.ViewModels.Author.AuthorCreateViewModel">
+            <summary>
+            The model that needs to be filled when creating a new author.
+            </summary>
+        </member>
+        <member name="P:QuizApi.ViewModels.Author.AuthorCreateViewModel.FullName">
+            <summary>
+            A FullName field containing the name of the author in string format with maximum allowed lenght 100 symbols. The fiels is required.
+            </summary>
+        </member>
+    </members>
+</doc>
